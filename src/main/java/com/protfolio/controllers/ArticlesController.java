@@ -22,6 +22,7 @@ public class ArticlesController {
 	@GetMapping({"", "/"})
 	public String showArticleList(Model model) {
 		List<Article> articles = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-		
+		model.addAttribute("articles", articles);
+		return "articles/index";
 	}
 }
