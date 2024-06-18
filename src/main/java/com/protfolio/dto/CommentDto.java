@@ -4,7 +4,9 @@ import com.protfolio.models.Article;
 import com.protfolio.models.User;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
+@Data
 public class CommentDto {
 	
 	private Article article;
