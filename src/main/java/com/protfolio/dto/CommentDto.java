@@ -10,7 +10,7 @@ import lombok.Data;
 public class CommentDto {
 	
 	private Article article;
-	
+	 
 	private User user;
 	
 	 @NotEmpty(message = "名前が入力してください") 
