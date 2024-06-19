@@ -1,5 +1,7 @@
 package com.protfolio.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.protfolio.models.User;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -15,5 +17,5 @@ public class ArticleDto {
 	 @NotEmpty(message = "名前が入力してください")
 	 private String content;
 	 
-	 private String imageFileName;
+	 private MultipartFile imageFileName;
 }
