@@ -34,11 +34,14 @@ public class SecurityConfig {
 	        ).logout(logout -> logout
 	                .logoutSuccessUrl("/")
 	        ).authorizeHttpRequests(authz -> authz
-//	                 あとで削除参照権限
+//	                 あとで削除
 	                .requestMatchers("/articles")
 	                .permitAll()
-//	                あとで削除参照権限
-	                .requestMatchers("/articles/create")
+//	                あとで削除
+	                .requestMatchers("/articles/**")
+	                .permitAll()
+//	                あとで削除
+	                .requestMatchers("/images/**")
 	                .permitAll()
 	        );
 	        return http.build();

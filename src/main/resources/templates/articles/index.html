@@ -15,7 +15,7 @@
 		        <td th:text="${article.content}"></td>
 		        <td th:text="${article.user.name}"></td>
 		        <td>
-		            <img th:src="@{'/images/' + ${article.imageFileName}}" alt="..." width="100"/>
+		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>
 		        </td>
 		       
 		</tbody>
