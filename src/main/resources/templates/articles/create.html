@@ -11,11 +11,14 @@
 		<div class="row">
 			<div class="col-md-8 mx-auto rounded border p-4 m-4">
 				<h2 class="text-center mb-5">記事を投稿</h2>
-				  <form methot="post" enctype="multipart/form-data" th:object="${articleDto}">
+				  <form method="post" th:action="@{/articles/create}" enctype="multipart/form-data" th:object="${articleDto}">    	
+				     <input class="form-control" th:field="${articleDto.user}" value="2">
+				        	
 				    <div class="row mb-3">
 				        <label class="col-sm-4 col-form-label">タイトル</label>
 				        <div class="col-sm-8">
 				            <input class="form-control" th:field="${articleDto.title}">
+				        	  <p th:if="${#fields.hasErrors('title')}" th:errors="${productDto.title}" th:errorclass="text-danger"></p>
 				        </div>
 				    </div>
 				    <div class="row mb-3">

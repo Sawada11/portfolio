@@ -13,7 +13,7 @@
 		    <tr th:each="article : ${articles}">
 		        <td th:text="${article.id}"></td>
 		        <td th:text="${article.content}"></td>
-		        <td th:text="${article.user.name}"></td>
+<!--		        <td th:text="${article.user.name}"></td>-->
 		        <td>
 		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>
 		        </td>
