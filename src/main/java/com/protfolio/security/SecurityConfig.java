@@ -35,14 +35,10 @@ public class SecurityConfig {
 	                .logoutSuccessUrl("/")
 	        ).authorizeHttpRequests(authz -> authz
 //	                 あとで削除
-	                .requestMatchers("/articles")
+	          
+	                .requestMatchers("/**")
 	                .permitAll()
-//	                あとで削除
-	                .requestMatchers("/articles/**")
-	                .permitAll()
-//	                あとで削除
-	                .requestMatchers("/images/**")
-	                .permitAll()
+
 	        );
 	        return http.build();
 		
