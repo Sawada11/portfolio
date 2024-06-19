@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.protfolio.dto.ArticleDto;
@@ -59,7 +60,7 @@ public class ArticlesController {
 	 * 投稿機能
 	 */
 	@PostMapping("/create")
-	public String createProduct(
+	public String createArticle(
 			@Valid @ModelAttribute ArticleDto articleDto,
 			BindingResult result) {
 
@@ -105,6 +106,27 @@ public class ArticlesController {
 	}
 	
 
-//	xx
-	
+	/*
+	 * 編集画面
+	 */
+	@GetMapping("/edit")
+	public String showEditPage(
+			Model model,
+			@RequestParam int id) {
+		try {
+			Article article = repo.findById(id).get();
+			model.addAttribute("article", article);
+			
+			ArticleDto articleDto = new ArticleDto();
+			articleDto.setUser(article.getUser());
+			articleDto.setTitle(article.getTitle());
+			articleDto.setContent(article.getContent());
+			
+			model.addAttribute("articleDto",articleDto);
+		}catch(Exception ex) {
+			System.out.println("例外：" + ex.getMessage());
+			return "redirect:/articles";
+		}
+		return "articles/edit";
+	}
 }

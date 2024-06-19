@@ -17,7 +17,7 @@
 		        <td>
 		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>
 		        </td>
-		       
+		       		  <a class="btn btn-primary btn-sm" th:href="@{/articles/edit(id=${article.id})}">編集</a>
 		</tbody>
 	</table>
 	<a th:href="@{/articles/create}" class="p-1">
