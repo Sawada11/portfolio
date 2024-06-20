@@ -129,4 +129,53 @@ public class ArticlesController {
 		}
 		return "articles/edit";
 	}
+	
+	/*
+	 * 編集機能
+	 */
+	@PostMapping("/edit")
+	public String editArticle(
+			Model model,
+			@RequestParam int id,
+			@Valid @ModelAttribute ArticleDto articleDto,
+			BindingResult result) {
+	try {
+		System.out.println("あああああああああああああああああああ");
+		Article article = repo.findById(id).get();
+		
+		if(result.hasErrors()) {
+			return "articles/edit";
+		}
+		
+		if(!articleDto.getImageFileName().isEmpty()) {
+			String uploadDir = "public/images/";
+			Path oldImagePath = Paths.get(uploadDir + article.getImageFileName());
+//			画像データを削除
+			try {
+				Files.delete(oldImagePath);
+			}catch(Exception ex) {
+				System.out.println("例外:" + ex.getMessage());
+			}
+			
+			MultipartFile image = articleDto.getImageFileName();
+			Date createdAt = new Date();
+			String storageFileName = createdAt.getTime() + "_" + image.getOriginalFilename();
+			
+//			画像データを指定のディレクトリにコピー
+			try (InputStream inputStream = image.getInputStream()){
+				Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
+							StandardCopyOption.REPLACE_EXISTING);
+			}
+			article.setImageFileName(storageFileName);
+			article.setUser(articleDto.getUser());
+			article.setTitle(articleDto.getTitle());
+			article.setContent(articleDto.getContent());
+			
+			repo.save(article);
+		}
+		}catch(Exception ex) {
+			System.out.println("例外:"+ ex.getMessage());
+		}
+		return "redirect:/articles";
+	}
 }

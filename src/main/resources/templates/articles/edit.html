@@ -12,12 +12,10 @@
 			<div class="col-md-8 mx-auto rounded border p-4 m-4">
 				<h2 class="text-center mb-5">編集画面</h2>
 				
-	<form method="post" th:action="@{/articles/edit}"　enctype="multipart/form-data" th:object="${articleDto}">
+	<form method="post" th:action="@{/articles/edit(id=${article.id})}"enctype="multipart/form-data" th:object="${articleDto}">
 	    <div class="row mb-3">
 	        <div class="col-sm-8">
-	            <input readonly class="d-none " th:value="${article.id}">
-	            <input readonly class="d-none" th:value="${articleDto.user.id}">
-	            <input  class="d-none" th:value="${article.createdAt}">
+	            <input  type="hidden" th:field="${articleDto.user.id}" th:value="${articleDto.user.id}">
 	        </div>
 	    </div>
 	 <div class="row mb-3">
