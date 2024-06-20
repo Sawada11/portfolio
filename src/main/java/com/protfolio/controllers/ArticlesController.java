@@ -140,7 +140,6 @@ public class ArticlesController {
 			@Valid @ModelAttribute ArticleDto articleDto,
 			BindingResult result) {
 	try {
-		System.out.println("あああああああああああああああああああ");
 		Article article = repo.findById(id).get();
 		
 		if(result.hasErrors()) {
@@ -175,6 +174,54 @@ public class ArticlesController {
 		}
 		}catch(Exception ex) {
 			System.out.println("例外:"+ ex.getMessage());
+		}
+		return "redirect:/articles";
+	}
+	
+	/*
+	 * 削除画面
+	 */
+	@GetMapping("/delete")
+	public String showDeletePage(
+			Model model,
+			@RequestParam int id) {
+		try {
+			Article article = repo.findById(id).get();
+			model.addAttribute("article", article);
+			
+			ArticleDto articleDto = new ArticleDto();
+			articleDto.setUser(article.getUser());
+			articleDto.setTitle(article.getTitle());
+			articleDto.setContent(article.getContent());
+			
+			model.addAttribute("articleDto",articleDto);
+		}catch(Exception ex) {
+			System.out.println("例外：" + ex.getMessage());
+			return "redirect:/articles";
+		}
+		return "articles/delete";
+	}
+	
+	/*
+	 * 削除機能
+	 */
+	@PostMapping("/delete")
+	public String deleteArticle(
+			@RequestParam int id
+			) {
+		try {
+			Article article = repo.findById(id).get();
+			
+			Path imagePath = Paths.get("public/images/" + article.getImageFileName());
+			
+			try {
+				Files.delete(imagePath);
+			}catch(Exception ex) {
+				System.out.println("例外:" + ex.getMessage());
+			}
+			repo.delete(article);
+		}catch(Exception ex) {
+			System.out.println("例外:" + ex.getMessage());
 		}
 		return "redirect:/articles";
 	}

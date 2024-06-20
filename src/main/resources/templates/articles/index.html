@@ -11,13 +11,29 @@
 	
 		<tbody>
 		    <tr th:each="article : ${articles}">
-		        <td th:text="${article.id}"></td>
-		        <td th:text="${article.content}"></td>
-<!--		        <td th:text="${article.user.name}"></td>-->
-		        <td>
+				<div class="container mt-5">
+        			<div class="card" style="width: 18rem;">
+            			<div class="card-img-top">
+                			<span> <td>
 		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>
-		        </td>
-		       		  <a class="btn btn-primary btn-sm" th:href="@{/articles/edit(id=${article.id})}">編集</a>
+		        </td></span>
+            			</div>
+            		<div class="card-body">
+                		<h5 class="card-title"><td th:text="${article.title}"></td></h5>
+                		<p class="card-text"><td th:text="${article.content}"></td></p>
+                		<p class="card-text"><small class="text-muted"><td th:text="${article.user.name}"></td></small></p>
+            			</div>
+            			  <a class="btn btn-primary btn-sm" th:href="@{/articles/edit(id=${article.id})}">編集</a>
+		       		  <a class="btn btn-danger btn-sm" th:href="@{/articles/delete(id=${article.id})}">削除</a>
+        			</div>
+    			</div>
+<!--		        <td th:text="${article.id}"></td>-->
+<!--		        <td th:text="${article.content}"></td>-->
+<!--		        <td th:text="${article.user.name}"></td>-->
+<!--		        <td>-->
+<!--		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>-->
+<!--		        </td>-->
+		       		
 		</tbody>
 	</table>
 	<a th:href="@{/articles/create}" class="p-1">
