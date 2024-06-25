@@ -61,10 +61,8 @@
 	
 	<div class="col-md-3 col-sm-6" th:each="comment : ${comments}">
     <div th:if="${comment.article.id} == ${article.id}">
-        <p th:text="${comment.id}"></p>
         <p th:text="${comment.user.name}"></p>
         <p th:text="${comment.content}"></p>
-        
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#commentModal' + ${comment.id}">
             :
@@ -82,6 +80,7 @@
                         <p th:text="${comment.content}"></p>
                         <form th:action="@{/articles/comments/edit}" method="post">
                             <input type="hidden" name="commentId" th:value="${comment.id}">
+                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
                             <textarea name="content" th:text="${comment.content}"></textarea>
                             <button type="submit" class="btn btn-primary">編集</button>
                         </form>
@@ -89,6 +88,7 @@
                     <div class="modal-footer">
                         <form th:action="@{/articles/comments/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete this comment?');">
                             <input type="hidden" name="commentId" th:value="${comment.id}">
+                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
                             <button type="submit" class="btn btn-danger">削除</button>
                         </form>
                     </div>
@@ -97,7 +97,6 @@
         </div>
     </div>
 </div>
-<!--以上-->
 	
 	
 			</div>

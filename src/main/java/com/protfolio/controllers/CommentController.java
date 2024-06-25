@@ -79,19 +79,31 @@ public class CommentController {
 		comment.setCreatedAt(createAt);
 		
 		repoComment.save(comment);
-		return "redirect:/articles/comment?id=" + id;
+		return "redirect:/articles/comment?id=" + id ;
 	}
 	
+	/*
+	 * コメント編集
+	 */
 	@PostMapping("/comments/edit")
-	public String editComment(@RequestParam Long commentId, @RequestParam String content) {
-	    
-	    return "redirect:/articles" ;
-	}
+	public String editComment(@RequestParam int commentId,
+			@RequestParam int articleId,
+			@Valid @ModelAttribute CommentDto commentDto) {
+	    Comment comment = repoComment.findById(commentId).get();
+	    comment.setContent(commentDto.getContent());
+		repoComment.save(comment);
 
+	    return "redirect:/articles/comment?id=" + articleId ;
+	}
+	/*
+	 * コメントの削除
+	 */
 	@PostMapping("/comments/delete")
-	public String deleteComment(@RequestParam int commentId) {
+	public String deleteComment(@RequestParam int commentId,
+			@RequestParam int articleId) {
 	   Comment comment = repoComment.findById(commentId).get();
 	   repoComment.delete(comment);
-	    return "redirect:/articles" ;
+	    return "redirect:/articles/comment?id=" + articleId ;
 	}
+
 }
