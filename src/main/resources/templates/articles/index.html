@@ -1,45 +1,35 @@
-  <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Best Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link th:href="@{css/home.css}" rel="stylesheet">
+
   </head>
   <body>
-    <div class="contaier">
-	
-		<tbody>
-		    <tr th:each="article : ${articles}">
-				<div class="container mt-5">
-        			<div class="card" style="width: 18rem;">
-            			<div class="card-img-top">
-                			<span> <td>
-		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>
-		        </td></span>
-            			</div>
-            		<div class="card-body">
-                		<h5 class="card-title"><td th:text="${article.title}"></td></h5>
-                		<p class="card-text"><td th:text="${article.content}"></td></p>
-                		<p class="card-text"><small class="text-muted"><td th:text="${article.user.name}"></td></small></p>
-            			</div>
-            			  <a class="btn btn-primary btn-sm" th:href="@{/articles/edit(id=${article.id})}">編集</a>
-		       		  <a class="btn btn-danger btn-sm" th:href="@{/articles/delete(id=${article.id})}">削除</a>
-        			</div>
-    			</div>
-<!--		        <td th:text="${article.id}"></td>-->
-<!--		        <td th:text="${article.content}"></td>-->
-<!--		        <td th:text="${article.user.name}"></td>-->
-<!--		        <td>-->
-<!--		            <img th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" width="100"/>-->
-<!--		        </td>-->
-		       		
-		</tbody>
-	</table>
-	<a th:href="@{/articles/create}" class="p-1">
-	 <button class=" btn btn-primary fixed-button" >＋</button>
-	</a>
-	</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 " th:each="article : ${articles}">
+                <a  th:href="@{/articles/comment(id=${article.id})}">
+                    <div class="card-img-top">
+                        <img class="border rounded" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${article.title}"></h5>
+                        <p class="card-text" th:text="${article.content}"></p>
+                        <p class="card-text">
+                            <small class="text-muted" th:text="${article.user.name}"></small>
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/articles/create}" class="fab-button">+</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIqEcF1x0Xk14YoF0b5iujV0ZQw+4fqop5AA5Fv5r1vqxezLXHo" crossorigin="anonymous"></script>
   </body>
 </html>
