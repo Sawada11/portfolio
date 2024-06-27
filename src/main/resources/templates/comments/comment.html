@@ -46,10 +46,6 @@
 		</div>
 		
 		<form method="post" th:action="@{/articles/post(id=${article.id})}"enctype="multipart/form-data" th:object="${commentDto}">
-		 <label>ユーザーID</label>
-		 <input class="form-control" th:field="${commentDto.user.id}" value="2">
-		 <label>記事ID</label>
-		 <input  class="form-control-plaintext" th:field="${commentDto.article}" th:value="${article.id}">
 		 <label>コメント内容</label>
 		 <div class="d-flex">
 			 <input class="w-75" th:field="${commentDto.content}">
@@ -61,7 +57,7 @@
 	
 	<div class="col-md-3 col-sm-6" th:each="comment : ${comments}">
     <div th:if="${comment.article.id} == ${article.id}">
-        <p th:text="${comment.user.name}"></p>
+        <p th:text="${comment.user.username}"></p>
         <p th:text="${comment.content}"></p>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#commentModal' + ${comment.id}">

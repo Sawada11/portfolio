@@ -2,7 +2,7 @@ package com.protfolio.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.protfolio.models.User;
+import com.protfolio.security.User;
 
 import jakarta.persistence.ManyToOne;
 import lombok.Data;

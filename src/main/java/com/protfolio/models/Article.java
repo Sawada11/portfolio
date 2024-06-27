@@ -3,6 +3,8 @@ package com.protfolio.models;
 import java.util.Date;
 import java.util.List;
 
+import com.protfolio.security.User;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

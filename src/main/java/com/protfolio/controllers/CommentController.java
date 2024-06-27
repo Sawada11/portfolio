@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,8 @@ import com.protfolio.models.Article;
 import com.protfolio.models.Comment;
 import com.protfolio.repository.ArticlesRepository;
 import com.protfolio.repository.CommentRepository;
+import com.protfolio.security.User;
+import com.protfolio.security.UserRepository;
 
 import jakarta.validation.Valid;
 
@@ -33,6 +37,8 @@ public class CommentController {
 	@Autowired 
 	private CommentRepository repoComment;
 	
+	@Autowired
+	private UserRepository userRepository;
 	/*
 	 * 記事詳細
 	 */
@@ -69,12 +75,22 @@ public class CommentController {
 			Model model,
 			@RequestParam int id,
 			@Valid @ModelAttribute CommentDto commentDto,
-			BindingResult result
+			BindingResult result,
+			@AuthenticationPrincipal UserDetails userDetails
 			) {
+//		ログインユーザーを取得
+		User currentUser = null;
+		if(userDetails != null) {
+			String username = userDetails.getUsername();
+			currentUser = userRepository.findByUsername(username);
+		}
+		  // 記事を取得
+	    Article article = repoArticle.findById(id)
+	            .orElseThrow(() -> new RuntimeException("記事が見つかりません"));
 		Date createAt = new Date();
 		Comment comment = new Comment();
-		comment.setArticle(commentDto.getArticle());
-		comment.setUser(commentDto.getUser());
+		comment.setArticle(article);
+		comment.setUser(currentUser);
 		comment.setContent(commentDto.getContent());
 		comment.setCreatedAt(createAt);
 		

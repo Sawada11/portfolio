@@ -1,7 +1,7 @@
 package com.protfolio.dto;
 
 import com.protfolio.models.Article;
-import com.protfolio.models.User;
+import com.protfolio.security.User;
 
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
