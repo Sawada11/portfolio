@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロフィール</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{css/home.css}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">S/A</a>
+            <div class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="検索" aria-label="Search">
+                <a class="nav-link" href="#">ホーム</a>
+                <a class="nav-link" href="#">ランキング</a>
+                <button class="btn btn-outline-secondary rounded-circle" type="button">
+                    <i class="bi bi-person"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Profile Picture">
+            </div>
+            <div class="col-md-8">
+                <h2 th:text="${user}">名前</h2>
+                <button class="btn btn-outline-secondary">編集</button>
+            </div>
+        </div>
+
+        <h3 class="mt-4">投稿</h3>
+<div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 " th:each="article : ${articles}">
+                <a  th:href="@{/articles/comment(id=${article.id})}">
+                    <div class="card-img-top">
+                        <img class="border rounded" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${article.title}"></h5>
+                        <p class="card-text" th:text="${article.content}"></p>
+                        <p class="card-text">
+                            <small class="text-muted" th:text="${article.user.username}"></small>
+                        </p>
+                
+                    </div>
+                </a>
+                <a  th:href="@{/articles/edit(id=${article.id})}">編集</a>
+                <a th:href="@{/articles/delete(id=${article.id})}">削除</a>
+            </div>
+        </div>
+    </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
