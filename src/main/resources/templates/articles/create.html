@@ -12,25 +12,25 @@
 			<div class="col-md-8 mx-auto rounded border p-4 m-4">
 				<h2 class="text-center mb-5">記事を投稿</h2>
 					<form method="post" th:action="@{/articles/create}" enctype="multipart/form-data" th:object="${articleDto}">
-<!--						 <input class="form-control" name="articleDto.user.id" th:value="${user.id}">-->
-
 						<div class="row mb-3">
 								<label class="col-sm-4 col-form-label">タイトル</label>
 								<div class="col-sm-8">
 										<input class="form-control" th:field="${articleDto.title}">
-										<p th:if="${#fields.hasErrors('title')}" th:errors="${productDto.title}" th:errorclass="text-danger"></p>
+										<p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" th:errorclass="text-danger"></p>
 								</div>
 						</div>
 						<div class="row mb-3">
 								<label class="col-sm-4 col-form-label">内容</label>
 								<div class="col-sm-8">
 										<textarea class="form-control" th:field="${articleDto.content}"></textarea>
+										<p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="text-danger"></p>
 								</div>
 						</div>
 						<div class="row mb-3">
 								<label class="col-sm-4 col-form-label">画像</label>
 								<div class="col-sm-8">
 										<input type="file" class="form-control" th:field="${articleDto.imageFileName}">
+										<p th:if="${#fields.hasErrors('imageFileName')}" th:errors="*{imageFileName}" th:errorclass="text-danger"></p>
 							 </div>
 						</div>
 						 <div class="row">
