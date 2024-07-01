@@ -7,10 +7,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -49,15 +51,18 @@ public class ArticlesController {
 	 * 	記事を表示
 	 *  記事はIDの降順でソートされる。
 	 */
-	@GetMapping({"", "/"})
-	public String showArticleList(Model model, Principal principal) {
-		List<Article> articles = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-		model.addAttribute("articles", articles);
-		UserDetails user = userService.loadUserByUsername(principal.getName());
-		model.addAttribute("user",user);
-		return "articles/index";
-	}
-	
+    @GetMapping({"", "/"})
+    public String showArticleList(Model model, 
+                                  Principal principal, 
+                                  @PageableDefault(size = 12, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Article> articlesPage = repo.findAll(pageable);
+        model.addAttribute("articlesPage", articlesPage);
+        
+        UserDetails user = userService.loadUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        
+        return "articles/index";
+    }
 	/*
 	 * 投稿ページを表示
 	 */

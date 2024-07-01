@@ -1,39 +1,63 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Best Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link th:href="@{css/home.css}" rel="stylesheet">
-<style>
+    <style>
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="layout/header :: header"></div>
 
-</style>
-  </head>
-  <body>
-	  <div th:replace="layout/header :: header"></div>
-	  
- <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-3 col-sm-6 " th:each="article : ${articles}">
-            <a th:href="@{/articles/comment(id=${article.id})}" style="text-decoration: none; color: inherit;">
-                <div class="card-img-top">
-                    <img class="border rounded" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-dark" th:text="${#strings.abbreviate(article.title, 18)}"></h5>
-                    <p class="card-text text-secondary" th:text="${#strings.abbreviate(article.content, 18)}"></p>
-                    <p class="card-text">
-                        <small class="text-muted" th:text="${article.user.username}"></small>
-                    </p>
-                </div>
-            </a>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 " th:each="article : ${articlesPage.content}">
+                <a th:href="@{/articles/comment(id=${article.id})}" style="text-decoration: none; color: inherit;">
+                    <div class="card-img-top">
+                        <img class="border rounded" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-dark" th:text="${#strings.abbreviate(article.title, 18)}"></h5>
+                        <p class="card-text text-secondary" th:text="${#strings.abbreviate(article.content, 18)}"></p>
+                        <p class="card-text">
+                            <small class="text-muted" th:text="${article.user.username}"></small>
+                        </p>
+                    </div>
+                </a>
+            </div>
         </div>
+
+        <!-- ページネーション -->
+        <nav aria-label="Page navigation" th:if="${articlesPage.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${articlesPage.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/articles(page=${articlesPage.number - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, articlesPage.totalPages - 1)}"
+                    th:classappend="${pageNumber == articlesPage.number} ? 'active'">
+                    <a class="page-link" th:href="@{/articles(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${articlesPage.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/articles(page=${articlesPage.number + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
-</div>
+
     <a th:href="@{/articles/create}" class="fab-button">+</a>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIqEcF1x0Xk14YoF0b5iujV0ZQw+4fqop5AA5Fv5r1vqxezLXHo" crossorigin="anonymous"></script>
-  </body>
+</body>
 </html>
