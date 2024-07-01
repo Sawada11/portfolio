@@ -23,3 +23,18 @@
             color: aliceblue;
             text-decoration: none;
         }
+        
+       .mr-3{
+		   margin-right: 30px;
+	   }
+	   	.card-img-top{
+		        width: 100%;
+        height: 200px; /* 任意の高さに調整可能 */
+        overflow: hidden;
+
+	}
+	.card-img-top img{
+		 width: 100%;
+        height: 100%;
+        object-fit: cover;
+	}

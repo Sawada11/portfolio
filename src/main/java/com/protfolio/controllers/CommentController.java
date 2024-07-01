@@ -1,5 +1,6 @@
 package com.protfolio.controllers;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.protfolio.repository.ArticlesRepository;
 import com.protfolio.repository.CommentRepository;
 import com.protfolio.security.User;
 import com.protfolio.security.UserRepository;
+import com.protfolio.security.UserService;
 
 import jakarta.validation.Valid;
 
@@ -39,17 +41,25 @@ public class CommentController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 	/*
 	 * 記事詳細
 	 */
 	@GetMapping("/comment")
-	public String showCommentPage(Model model, @RequestParam int id) {
+	public String showCommentPage(Model model, @RequestParam int id,
+			Principal principal) {
 		CommentDto commentDto = new CommentDto();
 		model.addAttribute("commentDto", commentDto);
 		
 //		コメント欄
 		List<Comment> comments = repoComment.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		model.addAttribute("comments",comments);
+//		ログインユーザー取得
+		UserDetails user = userService.loadUserByUsername(principal.getName());
+		
+		model.addAttribute("user",user);
 		try {
 			Article article = repoArticle.findById(id).get();
 			model.addAttribute("article", article);

@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
      *
      */
     public void updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("ユーザーが存在しません"));
         existingUser.setUsername(user.getUsername());
         if (!user.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));

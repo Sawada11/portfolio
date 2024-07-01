@@ -1,5 +1,6 @@
 package com.protfolio.profile.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.protfolio.models.Article;
 import com.protfolio.profile.service.ArticleService;
 import com.protfolio.security.User;
 import com.protfolio.security.UserRepository;
+import com.protfolio.security.UserService;
 
 @Controller
 @RequestMapping("/profile")
@@ -25,15 +27,23 @@ public class ProfileController {
 	@Autowired
 	private ArticleService articleService;
 	
+	@Autowired
+	private UserService userService;
+	
+	/*
+	 * ログインユーザーの記事と情報を取得
+	 */
 	@GetMapping
-	public String showProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//		ログインユーザー取得
+	public String showProfile(Model model, @AuthenticationPrincipal UserDetails userDetails,
+			Principal principal) {
 		 String username = userDetails.getUsername();
+		 
 		 User currentUser = userRepository.findByUsername(username);
 //		ログインユーザーが投稿した記事を取得    
 		List<Article> currentArticles = articleService.getArticlesByUser(currentUser);
-			
-			model.addAttribute("user", username);
+//		ログインユーザー情報を取得
+		UserDetails user = userService.loadUserByUsername(principal.getName());
+		model.addAttribute("user",user);
 			model.addAttribute("articles", currentArticles);
 			return "profile/profileIndex";
 	}
