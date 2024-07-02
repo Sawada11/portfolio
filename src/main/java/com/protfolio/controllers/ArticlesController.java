@@ -55,7 +55,7 @@ public class ArticlesController {
     @GetMapping({"", "/"})
     public String showArticleList(Model model, 
                                   Principal principal, 
-                                  @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                  @PageableDefault(size = 12, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Article> articlesPage = repo.findAll(pageable);
         model.addAttribute("articlesPage", articlesPage);
         
