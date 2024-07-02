@@ -35,19 +35,25 @@
         </div>
 
         <!-- ページネーション -->
+<!--        ページ外ページを超える場合のみページネーションを表示-->
         <nav aria-label="Page navigation" th:if="${articlesPage.totalPages > 1}">
             <ul class="pagination">
+<!--				現在のページが最初のページであれば「前のページ」へのリンクを無効-->
                 <li class="page-item" th:classappend="${articlesPage.first} ? 'disabled'">
                     <a class="page-link" th:href="@{/articles(page=${articlesPage.number - 1})}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
+<!--                ページ番号を表示-->
+<!--                現在のページ番号を強調表示する-->
                 <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, articlesPage.totalPages - 1)}"
                     th:classappend="${pageNumber == articlesPage.number} ? 'active'">
                     <a class="page-link" th:href="@{/articles(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${articlesPage.last} ? 'disabled'">
+<!--					次のページへのリンクを定義する-->
                     <a class="page-link" th:href="@{/articles(page=${articlesPage.number + 1})}" aria-label="Next">
+<!--                        次へボタン表示-->
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
