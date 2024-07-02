@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   </head>
   <body>
+	  <div th:replace="layout/header :: header"></div>
     <div class="contaier">
 		<div class="row col-md-8 mx-auto rounded">
 			<div class="  p-4 m-4">
@@ -18,40 +19,34 @@
 					alt="..." >
 			</div>
 		</div>
-	    <div class="row mb-3">
-	        <div class="col-sm-8">
-	            <input  type="hidden" th:field="${articleDto.user.id}" th:value="${articleDto.user.id}">
-	        </div>
-	    </div>
+<!--	    <div class="row mb-3">-->
+<!--	        <div class="col-sm-8">-->
+<!--	            <input  type="hidden" th:field="${articleDto.user.id}" th:value="${articleDto.user.id}">-->
+<!--	        </div>-->
+<!--	    </div>-->
 	 <div class="row mb-3">
 	        <label class="col-sm-4 col-form-label">タイトル</label>
 	        <div class="col-sm-8">
-	            <input class="form-control" th:field="${articleDto.title}">
-<!--	            <p th:if="${#fields.hasErrors('title')}" th:errors="${articleDto.title}" th:errorclass="text-danger"></p>-->
+				<p class="card-text" th:text="${articleDto.title}"></p>
 	        </div>
 	    </div>
 	     <div class="row mb-3">
 	        <label class="col-sm-4 col-form-label">内容</label>
 	        <div class="col-sm-8">
-	            <input class="form-control" th:field="${articleDto.content}">
-<!--	            <p th:if="${#fields.hasErrors('content')}" th:errors="${articleDto.content}" th:errorclass="text-danger"></p>-->
+				<p class="cartd-text" th:text="${articleDto.content}"></p>
 	        </div>
 	    </div>
 	    
 	     <div class="row">
 			
 			 <div class="col-sm-8 offset-sm-4 d-grid">
-				<a type="submit" class="btn btn-outline-primary" th:href="@{/articles}" role="button">＜もどる</a>
+				<a type="submit" class="btn btn-outline-primary" onclick="history.back()"  role="button">＜もどる</a>
 			</div>
 		</div>
 		
 		<form method="post" th:action="@{/articles/post(id=${article.id})}"enctype="multipart/form-data" th:object="${commentDto}">
-		 <label>ユーザーID</label>
-		 <input class="form-control" th:field="${commentDto.user.id}" value="2">
-		 <label>記事ID</label>
-		 <input  class="form-control-plaintext" th:field="${commentDto.article}" th:value="${article.id}">
 		 <label>コメント内容</label>
-		 <div class="d-flex">
+		 <div class="d-flex pb-3">
 			 <input class="w-75" th:field="${commentDto.content}">
 				<div class="">
 					<button type="submit" class="btn btn-primary">コメント</button>
@@ -60,45 +55,46 @@
 		</form>
 	
 	<div class="col-md-3 col-sm-6" th:each="comment : ${comments}">
-    <div th:if="${comment.article.id} == ${article.id}">
-        <p th:text="${comment.user.name}"></p>
-        <p th:text="${comment.content}"></p>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#commentModal' + ${comment.id}">
-            :
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" th:id="'commentModal' + ${comment.id}" tabindex="-1" th:aria-labelledby="'commentModalLabel' + ${comment.id}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" th:id="'commentModalLabel' + ${comment.id}" th:text="'Comment ' + ${comment.id}">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p th:text="${comment.content}"></p>
-                        <form th:action="@{/articles/comments/edit}" method="post">
-                            <input type="hidden" name="commentId" th:value="${comment.id}">
-                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
-                            <textarea name="content" th:text="${comment.content}"></textarea>
-                            <button type="submit" class="btn btn-primary">編集</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <form th:action="@{/articles/comments/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete this comment?');">
-                            <input type="hidden" name="commentId" th:value="${comment.id}">
-                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
-                            <button type="submit" class="btn btn-danger">削除</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--		ログインユーザーが投稿したコメントのみに表示-->
+		    <div th:if="${comment.article.id} == ${article.id}">
+				<div  th:if="${comment.user.id} == ${user.id}">
+			        <button type="button" class="btn btn-outline-secondary p-2 float-start " data-bs-toggle="modal" th:data-bs-target="'#commentModal' + ${comment.id}">
+			            :
+			        </button>
+		        </div>
+		        <p th:text="${comment.user.username}"></p>
+		        <p th:text="${comment.content}"></p>
+		        <!--		ログインユーザーが投稿したコメントのみに表示-->
+		        
+		        <div class="modal fade" th:id="'commentModal' + ${comment.id}" tabindex="-1" th:aria-labelledby="'commentModalLabel' + ${comment.id}" aria-hidden="true">
+		            <div class="modal-dialog">
+		                <div class="modal-content">
+		                    <div class="modal-header">
+		                        <h1 class="modal-title fs-5" th:id="'commentModalLabel' + ${comment.id}" th:text="'Comment ' + ${comment.id}">Modal title</h1>
+		                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		                    </div>
+		                    <div class="modal-body">
+		                        <p th:text="${comment.content}"></p>
+		                        <form th:action="@{/articles/comments/edit}" method="post">
+		                            <input type="hidden" name="commentId" th:value="${comment.id}">
+		                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
+		                            <textarea name="content" th:text="${comment.content}"></textarea>
+		                            <button type="submit" class="btn btn-primary">編集</button>
+		                        </form>
+		                    </div>
+		                    <div class="modal-footer">
+		                        <form th:action="@{/articles/comments/delete}" method="post" onsubmit="return confirm('本当に削除しますか？');">
+		                            <input type="hidden" name="commentId" th:value="${comment.id}">
+		                            <input type="hidden" name="articleId" th:value="${comment.article.id}"> 
+		                            <button type="submit" class="btn btn-danger">削除</button>
+		                        </form>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
 	
-	
+	</div>
 			</div>
 		</div>
 	</div>

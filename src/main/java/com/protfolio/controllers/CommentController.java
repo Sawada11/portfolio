@@ -1,10 +1,13 @@
 package com.protfolio.controllers;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +23,9 @@ import com.protfolio.models.Article;
 import com.protfolio.models.Comment;
 import com.protfolio.repository.ArticlesRepository;
 import com.protfolio.repository.CommentRepository;
+import com.protfolio.security.User;
+import com.protfolio.security.UserRepository;
+import com.protfolio.security.UserService;
 
 import jakarta.validation.Valid;
 
@@ -33,17 +39,27 @@ public class CommentController {
 	@Autowired 
 	private CommentRepository repoComment;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 	/*
 	 * 記事詳細
 	 */
 	@GetMapping("/comment")
-	public String showCommentPage(Model model, @RequestParam int id) {
+	public String showCommentPage(Model model, @RequestParam int id,
+			Principal principal) {
 		CommentDto commentDto = new CommentDto();
 		model.addAttribute("commentDto", commentDto);
 		
 //		コメント欄
 		List<Comment> comments = repoComment.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		model.addAttribute("comments",comments);
+//		ログインユーザー取得
+		UserDetails user = userService.loadUserByUsername(principal.getName());
+		
+		model.addAttribute("user",user);
 		try {
 			Article article = repoArticle.findById(id).get();
 			model.addAttribute("article", article);
@@ -69,12 +85,22 @@ public class CommentController {
 			Model model,
 			@RequestParam int id,
 			@Valid @ModelAttribute CommentDto commentDto,
-			BindingResult result
+			BindingResult result,
+			@AuthenticationPrincipal UserDetails userDetails
 			) {
+//		ログインユーザーを取得
+		User currentUser = null;
+		if(userDetails != null) {
+			String username = userDetails.getUsername();
+			currentUser = userRepository.findByUsername(username);
+		}
+		  // 記事を取得
+	    Article article = repoArticle.findById(id)
+	            .orElseThrow(() -> new RuntimeException("記事が見つかりません"));
 		Date createAt = new Date();
 		Comment comment = new Comment();
-		comment.setArticle(commentDto.getArticle());
-		comment.setUser(commentDto.getUser());
+		comment.setArticle(article);
+		comment.setUser(currentUser);
 		comment.setContent(commentDto.getContent());
 		comment.setCreatedAt(createAt);
 		

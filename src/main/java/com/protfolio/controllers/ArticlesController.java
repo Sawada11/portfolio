@@ -5,11 +5,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.protfolio.dto.ArticleDto;
 import com.protfolio.models.Article;
 import com.protfolio.repository.ArticlesRepository;
+import com.protfolio.security.User;
+import com.protfolio.security.UserRepository;
+import com.protfolio.security.UserService;
 
 import jakarta.validation.Valid;
 
@@ -34,26 +42,37 @@ public class ArticlesController {
 	@Autowired
 	private ArticlesRepository repo;
 	
+    @Autowired
+    private UserService userService;
+	
+    @Autowired
+    private UserRepository userRepository;
 	/*
 	 * 	記事を表示
-	 *  記事はIDの降順でソートされる。
+	 *  記事はIDの降順でソート
+	 *  ページネーション12記事表示
 	 */
-	@GetMapping({"", "/"})
-	public String showArticleList(Model model) {
-		List<Article> articles = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-		model.addAttribute("articles", articles);
-		return "articles/index";
-	}
-	
+    @GetMapping({"", "/"})
+    public String showArticleList(Model model, 
+                                  Principal principal, 
+                                  @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Article> articlesPage = repo.findAll(pageable);
+        model.addAttribute("articlesPage", articlesPage);
+        
+        UserDetails user = userService.loadUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        
+        return "articles/index";
+    }
 	/*
 	 * 投稿ページを表示
 	 */
 	@GetMapping("/create")
-	public String showCreatePage(Model model) {
-		ArticleDto articleDto = new ArticleDto();
-		model.addAttribute("articleDto", articleDto);
-
-		return "articles/create";
+	public String showCreatePage(Model model, @AuthenticationPrincipal UserDetails userDetails,Principal principal) {
+	    ArticleDto articleDto = new ArticleDto();
+	   
+	    model.addAttribute("articleDto", articleDto);
+	    return "articles/create";
 	}
 	
 	/*
@@ -62,7 +81,8 @@ public class ArticlesController {
 	@PostMapping("/create")
 	public String createArticle(
 			@Valid @ModelAttribute ArticleDto articleDto,
-			BindingResult result) {
+			BindingResult result,   
+			@AuthenticationPrincipal UserDetails userDetails) {
 
 		if(articleDto.getImageFileName().isEmpty()) {
 			result.addError(new FieldError("articleDto","imageFileName","画像が挿入されていません。"));
@@ -93,8 +113,15 @@ public class ArticlesController {
 			System.out.println("例外:" + e.getMessage());
 		}
 		
+//	     ログインユーザーの取得
+		User currentUser = null;
+	    if (userDetails != null) {
+	        String username = userDetails.getUsername();
+	        currentUser = userRepository.findByUsername(username);  
+	    }
+
 		Article article = new Article();
-		article.setUser(articleDto.getUser());
+		article.setUser(currentUser);
 		article.setTitle(articleDto.getTitle());
 		article.setContent(articleDto.getContent());
 		article.setImageFileName(storageFileName);

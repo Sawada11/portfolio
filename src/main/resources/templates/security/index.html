@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>アカウント</title>
+</head>
+<body>
+	アカウント画面
+        <p>User ID: <span th:text="${user.id}"></span></p>
+            <p>User ID: <span th:text="${user.username}"></span></p>
+  <a  th:href="@{/edit(id=${user.id})}">hen</a>
+</body>
+</html>
