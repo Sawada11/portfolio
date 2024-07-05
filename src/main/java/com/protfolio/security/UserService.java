@@ -8,10 +8,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.protfolio.profile.repository.ArticleRepository;
+import com.protfolio.repository.CommentRepository;
+
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private CommentRepository commentRepository;
+    
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -61,4 +69,15 @@ public class UserService implements UserDetailsService {
         userRepository.save(existingUser);
     }
     
+    /*
+     * ユーザーを削除
+     */
+    public void deleteUser(String username) {
+    	User user = userRepository.findByUsername(username);
+    	if(user != null) {
+    		userRepository.delete(user);
+    	} else {
+    		throw new UsernameNotFoundException("ユーザーが存在しません。");
+    	}
+    }
 }

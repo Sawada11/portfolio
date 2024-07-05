@@ -61,6 +61,25 @@ public class UserController {
     }
 
     /*
+     * ユーザー削除確認ページ
+     */
+    @GetMapping("/delete")
+    public String showDeleteUser(Model model, Principal principal) {
+    	UserDetails user = userService.loadUserByUsername(principal.getName());
+    	model.addAttribute("user",user);
+    	return "/security/delete";
+    }
+    
+    /*
+     * ユーザーを削除
+     */
+    @PostMapping("/delete")
+    public String deleteUser(Principal principal) {
+    	userService.deleteUser(principal.getName());
+    	return "redirect:/logout";
+    }
+    
+    /*
      * ログインページを表示
      */
     @GetMapping("/login")

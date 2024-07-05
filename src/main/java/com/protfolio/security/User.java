@@ -5,6 +5,7 @@ import java.util.List;
 import com.protfolio.models.Article;
 import com.protfolio.models.Comment;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,10 +18,10 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 public class User {
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Article> article;
 	 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comment;
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
