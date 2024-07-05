@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,9 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link th:href="@{css/home.css}" rel="stylesheet">
     <style>
-        .pagination {
-            justify-content: center;
-            margin-top: 20px;
+        .grid-item { width: 300px; margin-bottom: 20px; }
+        .grid-item img { width: 100%; height: auto; }
+        .fab-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            line-height: 60px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .fab-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -17,43 +33,37 @@
     <div th:replace="layout/header :: header"></div>
 
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-3 col-sm-6 " th:each="article : ${articlesPage.content}">
-                <a th:href="@{/articles/comment(id=${article.id})}" style="text-decoration: none; color: inherit;">
-                    <div class="card-img-top">
-                        <img class="border rounded" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-dark" th:text="${#strings.abbreviate(article.title, 18)}"></h5>
-                        <p class="card-text text-secondary" th:text="${#strings.abbreviate(article.content, 18)}"></p>
-                        <p class="card-text">
-                            <small class="text-muted" th:text="${article.user.username}"></small>
-                        </p>
-                    </div>
-                </a>
+        <div class="grid">
+            <div class="grid-item" th:each="article : ${articlesPage.content}">
+                <div class="card">
+                    <a th:href="@{/articles/comment(id=${article.id})}" style="text-decoration: none; color: inherit;">
+                        <img class="card-img-top" th:src="@{'/images/' + ${article.imageFileName}}" th:alt="${article.imageFileName}" />
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${#strings.abbreviate(article.title, 18)}"></h5>
+                            <p class="card-text" th:text="${#strings.abbreviate(article.content, 18)}"></p>
+                            <p class="card-text">
+                                <small class="text-muted" th:text="${article.user.username}"></small>
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- ページネーション -->
-<!--        ページ外ページを超える場合のみページネーションを表示-->
         <nav aria-label="Page navigation" th:if="${articlesPage.totalPages > 1}">
-            <ul class="pagination">
-<!--				現在のページが最初のページであれば「前のページ」へのリンクを無効-->
+            <ul class="pagination justify-content-center mt-4">
                 <li class="page-item" th:classappend="${articlesPage.first} ? 'disabled'">
                     <a class="page-link" th:href="@{/articles(page=${articlesPage.number - 1})}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-<!--                ページ番号を表示-->
-<!--                現在のページ番号を強調表示する-->
                 <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, articlesPage.totalPages - 1)}"
                     th:classappend="${pageNumber == articlesPage.number} ? 'active'">
                     <a class="page-link" th:href="@{/articles(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${articlesPage.last} ? 'disabled'">
-<!--					次のページへのリンクを定義する-->
                     <a class="page-link" th:href="@{/articles(page=${articlesPage.number + 1})}" aria-label="Next">
-<!--                        次へボタン表示-->
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -65,5 +75,15 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIqEcF1x0Xk14YoF0b5iujV0ZQw+4fqop5AA5Fv5r1vqxezLXHo" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.grid').masonry({
+                itemSelector: '.grid-item',
+                columnWidth: 300,
+                gutter: 20
+            });
+        });
+    </script>
 </body>
 </html>

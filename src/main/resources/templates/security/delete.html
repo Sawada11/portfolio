@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ユーザー削除確認</title>
+</head>
+<body>
+    <h1>ユーザー削除確認</h1>
+    <p>本当にアカウントを削除しますか？この操作は取り消せません。</p>
+    <p>ユーザー名: <span th:text="${user.username}"></span></p>
+    
+    <form th:action="@{/delete}" method="post">
+        <input type="submit" value="削除する" />
+    </form>
+    
+    <a th:href="@{/}">キャンセル</a>
+</body>
+</html>
