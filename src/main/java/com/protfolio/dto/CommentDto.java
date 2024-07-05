@@ -14,6 +14,6 @@ public class CommentDto {
 	@ManyToOne
 	private User user;
 	
-	 @NotEmpty(message = "名前が入力してください") 
+	 @NotEmpty(message = "コメントを入力してください") 
 	private String content;
 }
