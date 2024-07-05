@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.protfolio.security.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +20,7 @@ import lombok.Data;
 @Table(name = "articles")
 public class Article {
 	
-	@OneToMany(mappedBy = "article")
+	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
 	 private List<Comment> comment;
 	
 	@Id
