@@ -34,13 +34,13 @@ import jakarta.validation.Valid;
 public class CommentController {
 
 	@Autowired
-	private ArticlesRepository repoArticle;
+	private ArticlesRepository articleRepo;
 
 	@Autowired 
-	private CommentRepository repoComment;
+	private CommentRepository commentRepo;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userRepo;
 	
 	@Autowired
 	private UserService userService;
@@ -54,14 +54,14 @@ public class CommentController {
 		model.addAttribute("commentDto", commentDto);
 		
 //		コメント欄
-		List<Comment> comments = repoComment.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		List<Comment> comments = commentRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		model.addAttribute("comments",comments);
 //		ログインユーザー取得
 		UserDetails user = userService.loadUserByUsername(principal.getName());
 		
 		model.addAttribute("user",user);
 		try {
-			Article article = repoArticle.findById(id).get();
+			Article article = articleRepo.findById(id).get();
 			model.addAttribute("article", article);
 			
 			ArticleDto articleDto = new ArticleDto();
@@ -92,10 +92,14 @@ public class CommentController {
 		User currentUser = null;
 		if(userDetails != null) {
 			String username = userDetails.getUsername();
-			currentUser = userRepository.findByUsername(username);
+			currentUser = userRepo.findByUsername(username);
+		}
+		
+		if(result.hasErrors()) {
+			return "redirect:/articles/comment?id=" + id ;
 		}
 		  // 記事を取得
-	    Article article = repoArticle.findById(id)
+	    Article article = articleRepo.findById(id)
 	            .orElseThrow(() -> new RuntimeException("記事が見つかりません"));
 		Date createAt = new Date();
 		Comment comment = new Comment();
@@ -104,7 +108,7 @@ public class CommentController {
 		comment.setContent(commentDto.getContent());
 		comment.setCreatedAt(createAt);
 		
-		repoComment.save(comment);
+		commentRepo.save(comment);
 		return "redirect:/articles/comment?id=" + id ;
 	}
 	
@@ -115,9 +119,9 @@ public class CommentController {
 	public String editComment(@RequestParam int commentId,
 			@RequestParam int articleId,
 			@Valid @ModelAttribute CommentDto commentDto) {
-	    Comment comment = repoComment.findById(commentId).get();
+	    Comment comment = commentRepo.findById(commentId).get();
 	    comment.setContent(commentDto.getContent());
-		repoComment.save(comment);
+		commentRepo.save(comment);
 
 	    return "redirect:/articles/comment?id=" + articleId ;
 	}
@@ -127,8 +131,8 @@ public class CommentController {
 	@PostMapping("/comments/delete")
 	public String deleteComment(@RequestParam int commentId,
 			@RequestParam int articleId) {
-	   Comment comment = repoComment.findById(commentId).get();
-	   repoComment.delete(comment);
+	   Comment comment = commentRepo.findById(commentId).get();
+	   commentRepo.delete(comment);
 	    return "redirect:/articles/comment?id=" + articleId ;
 	}
 
