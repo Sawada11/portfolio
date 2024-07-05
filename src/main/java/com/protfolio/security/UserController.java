@@ -76,7 +76,7 @@ public class UserController {
     @PostMapping("/delete")
     public String deleteUser(Principal principal) {
     	userService.deleteUser(principal.getName());
-    	return "redirect:/logout";
+    	return "redirect:/login";
     }
     
     /*
