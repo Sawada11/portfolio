@@ -33,7 +33,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-lg-8">
-                <!-- 動画プレイヤー（画像で代用） -->
+                <!-- 画像 -->
                 <div class="video-container mb-3">
                     <img th:src="@{'/images/' + ${article.imageFileName}}" alt="動画サムネイル" class="img-fluid">
                 </div>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 
-                <!-- 動画の説明 -->
+                <!-- 画像の説明 -->
                 <div class="bg-light p-3 mb-4">
                     <p th:text="${articleDto.content}"></p>
                 </div>

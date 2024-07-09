@@ -8,6 +8,8 @@
     <link th:href="@{/css/custom.css}" rel="stylesheet">
 </head>
 <body class="bg-light">
+		   <div th:replace="layout/adminHeader :: header"></div>
+
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -21,7 +23,7 @@
                         
                         <form th:action="@{/admin/deleteUser(id=${user.id})}" method="post" class="mt-4">
                             <div class="d-grid gap-2">
-								<p th:text="${user.id}"></p>
+<!--								<p type="hidden" th:text="${user.id}"></p>-->
                                 <button type="submit" class="btn btn-danger">削除する</button>
                                 <a th:href="@{/admin}" class="btn btn-secondary">キャンセル</a>
                             </div>

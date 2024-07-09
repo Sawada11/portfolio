@@ -1,51 +1,61 @@
 <!doctype html>
-<html lang="en">
-  <head>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>編集画面</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  </head>
-  <body>
-	  <div th:replace="layout/header :: header"></div>
-    <div class="contaier">
-		<div class="row">
-			<div class="col-md-8 mx-auto rounded border p-4 m-4">
-				<h2 class="text-center mb-5">削除画面</h2>
-				
-	<form method="post" th:action="@{/admin/delete(id=${article.id})}"enctype="multipart/form-data" th:object="${articleDto}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>記事削除確認 - 管理画面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .delete-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="layout/adminHeader :: header"></div>
+    
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 delete-card p-5">
+                <h2 class="text-center mb-4">記事削除確認</h2>
+                
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>この操作は取り消せません。本当に削除しますか？
+                </div>
 
-	 <div class="row mb-3">
-	        <label class="col-sm-4 col-form-label">タイトル</label>
-	        <div class="col-sm-8">
-	           		<p th:text="${articleDto.title}"></p>
-	        </div>
-	    </div>
-	     <div class="row mb-3">
-	        <label class="col-sm-4 col-form-label">内容</label>
-	        <div class="col-sm-8">
-				<p th:text="${articleDto.content}"></p>
-	            </div>
-	    </div>
-	    	<div class="row mb-3">
-			<div class="offset-sm-4 col-sm-8">
-				<img th:src="@{'/images/' + ${article.imageFileName}}"
-					alt="..." width="150">
-			</div>
-		</div>
-	    
-	     <div class="row">
-			<div class="col-sm-8 offset-sm-4 d-grid">
-				<button type="submit" class="btn btn-danger">削除</button>
-			</div>
-			 <div class="col-sm-8 offset-sm-4 d-grid">
-				<a type="submit" class="btn btn-outline-primary" onclick="history.back()"  role="button">＜もどる</a>
-			</div>
-		</div>
-	</form>
-			</div>
-		</div>
-	</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  </body>
+                <form method="post" th:action="@{/admin/delete(id=${article.id})}" enctype="multipart/form-data" th:object="${articleDto}">
+                    <div class="mb-4">
+                        <h5 class="fw-bold">タイトル</h5>
+                        <p class="lead" th:text="${articleDto.title}"></p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold">内容</h5>
+                        <p th:text="${articleDto.content}"></p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold">画像</h5>
+                        <img th:src="@{'/images/' + ${article.imageFileName}}" alt="記事画像" class="img-fluid rounded" style="max-width: 300px;">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-trash-alt me-2"></i>削除する
+                        </button>
+                        <a class="btn btn-outline-secondary btn-lg" onclick="history.back()" role="button">
+                            <i class="fas fa-arrow-left me-2"></i>戻る
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

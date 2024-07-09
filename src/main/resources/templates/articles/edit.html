@@ -1,65 +1,64 @@
 <!doctype html>
-<html lang="en">
-  <head>
+<html lang="ja">
+<head>
     <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>編集画面</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  </head>
-  <body>
-	  <div th:replace="layout/header :: header"></div>
-    <div class="contaier">
-		<div class="row">
-			<div class="col-md-8 mx-auto rounded border p-4 m-4">
-				<h2 class="text-center mb-5">編集画面</h2>
-				
-	<form method="post" th:action="@{/profile/edit(id=${article.id})}"enctype="multipart/form-data" th:object="${articleDto}">
-	    <div class="row mb-3">
-	        <div class="col-sm-8">
-	            <input  type="hidden" th:field="${articleDto.user.id}" th:value="${articleDto.user.id}">
-	        </div>
-	    </div>
-	 <div class="row mb-3">
-	        <label class="col-sm-4 col-form-label">タイトル</label>
-	        <div class="col-sm-8">
-	            <input class="form-control" th:field="${articleDto.title}">
-	            <p th:if="${#fields.hasErrors('title')}" th:errors="${articleDto.title}" th:errorclass="text-danger"></p>
-	        </div>
-	    </div>
-	     <div class="row mb-3">
-	        <label class="col-sm-4 col-form-label">内容</label>
-	        <div class="col-sm-8">
-	            <input class="form-control" th:field="${articleDto.content}">
-	            <p th:if="${#fields.hasErrors('content')}" th:errors="${articleDto.content}" th:errorclass="text-danger"></p>
-	        </div>
-	    </div>
-	    	<div class="row mb-3">
-			<div class="offset-sm-4 col-sm-8">
-				<img th:src="@{'/images/' + ${article.imageFileName}}"
-					alt="..." width="150">
-			</div>
-		</div>
-	    <div class="row mb-3">
-	        <label class="col-sm-4 col-form-label">画像</label>
-	        <div class="col-sm-8">
-	            <input type="file" class="form-control" th:field="${articleDto.imageFileName}">
-	            <p th:if="${#fields.hasErrors('imageFileName')}" 
-	            	th:errors="${articleDto.imageFileName}" th:errorclass="text-danger"></p>
-	        </div>
-	    </div>
-	    
-	     <div class="row">
-			<div class="col-sm-8 offset-sm-4 d-grid">
-				<button type="submit" class="btn btn-primary">編集</button>
-			</div>
-			 <div class="col-sm-8 offset-sm-4 d-grid">
-				<a type="submit" class="btn btn-outline-primary" onclick="history.back()"  role="button">＜もどる</a>
-			</div>
-		</div>
-	</form>
-			</div>
-		</div>
-	</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>記事編集</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f0f2f5; }
+        .edit-card { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); background-color: white; }
+        .form-label { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div th:replace="layout/header :: header"></div>
+    
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card edit-card">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-center mb-4">記事編集</h2>
+                        
+                        <form method="post" th:action="@{/profile/edit(id=${article.id})}" enctype="multipart/form-data" th:object="${articleDto}">
+                            <input type="hidden" th:field="${articleDto.user.id}" th:value="${articleDto.user.id}">
+                            
+                            <div class="mb-4">
+                                <label for="title" class="form-label">タイトル</label>
+                                <input type="text" class="form-control form-control-lg" id="title" th:field="${articleDto.title}">
+                                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger mt-1"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="content" class="form-label">内容</label>
+                                <textarea class="form-control" id="content" rows="5" th:field="${articleDto.content}"></textarea>
+                                <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger mt-1"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <img th:src="@{'/images/' + ${article.imageFileName}}" alt="現在の画像" class="img-fluid rounded mb-3" style="max-width: 200px;">
+              
+                                <input type="file" class="form-control" id="image" th:field="${articleDto.imageFileName}">
+                                <p th:if="${#fields.hasErrors('imageFileName')}" th:errors="*{imageFileName}" class="text-danger mt-1"></p>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-pencil-fill me-2"></i>更新する
+                                </button>
+                                <a class="btn btn-outline-secondary btn-lg" onclick="history.back()" role="button">
+                                    <i class="bi bi-arrow-left me-2"></i>戻る
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

@@ -24,9 +24,11 @@
                                 <label for="password" class="form-label">新しいパスワード</label>
                                 <input type="password" class="form-control" th:field="*{password}">
                             </div>
-                            <div class="d-grid">
+                            <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-dark">更新</button>
+                                 <a  class="btn btn-secondary" onclick="history.back()">キャンセル</a>
                             </div>
+                            
                         </form>
                     </div>
                 </div>
