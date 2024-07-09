@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,12 +100,16 @@ public class ProfileController {
 			@RequestParam int id,
 			@Valid @ModelAttribute ArticleDto articleDto,
 			BindingResult result) {
-	try {
+		if(articleDto.getImageFileName().isEmpty()) {
+			result.addError(new FieldError("articleDto", "imageFileName", "画像が挿入されていません"));
+		}
 		Article article = articlesRepo.findById(id).get();
 		
 		if(result.hasErrors()) {
+			model.addAttribute("article", article); //エラー処理後、入力データを保持
 			return "articles/edit";
 		}
+	try {
 		
 		if(!articleDto.getImageFileName().isEmpty()) {
 			String uploadDir = "public/images/";
@@ -184,5 +189,13 @@ public class ProfileController {
 			System.out.println("例外:" + ex.getMessage());
 		}
 		return "redirect:/profile";
+	}
+	
+	/*
+	 * プロフィール設定画面
+	 */
+	@GetMapping("setting")
+	public String ProfileSettings() {
+		return "profile/setting";
 	}
 }
