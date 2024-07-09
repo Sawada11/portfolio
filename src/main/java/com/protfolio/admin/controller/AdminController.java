@@ -170,7 +170,6 @@ public class AdminController {
      */
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam Long id) {
-    	System.out.println("\\\\\6666&&&\\\\");
     	User user = userRepo.findById(id).get();
     	userRepo.delete(user);
     	return "redirect:/admin";
