@@ -116,9 +116,16 @@ public class CommentController {
 	 * コメント編集
 	 */
 	@PostMapping("/comments/edit")
-	public String editComment(@RequestParam int commentId,
+	public String editComment(
+			@RequestParam int commentId,
 			@RequestParam int articleId,
-			@Valid @ModelAttribute CommentDto commentDto) {
+			@Valid @ModelAttribute CommentDto commentDto,
+			BindingResult bindingResult,
+			Model model) {
+		if(bindingResult.hasErrors()) {
+			//エラーがあると元のページに戻る
+	        return "redirect:/articles/comment?id=" + articleId ;
+		}
 	    Comment comment = commentRepo.findById(commentId).get();
 	    comment.setContent(commentDto.getContent());
 		commentRepo.save(comment);
