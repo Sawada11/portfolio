@@ -50,6 +50,10 @@ public class UserService implements UserDetailsService {
      *
      */
     public void createUser(User user) {
+//    	ユーザー名の重複チェック
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new RuntimeException("ユーザー名は既に使用されています");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
