@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>動画詳細</title>
+    <title>詳細</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
@@ -33,12 +33,10 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-lg-8">
-                <!-- 動画プレイヤー（画像で代用） -->
                 <div class="video-container mb-3">
                     <img th:src="@{'/images/' + ${article.imageFileName}}" alt="動画サムネイル" class="img-fluid">
                 </div>
                 
-                <!-- タイトルと詳細 -->
                 <h1 th:text="${articleDto.title}"></h1>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
@@ -46,7 +44,6 @@
                     </div>
                 </div>
                 
-                <!-- 動画の説明 -->
                 <div class="bg-light p-3 mb-4">
                     <p th:text="${articleDto.content}"></p>
                 </div>
@@ -55,14 +52,13 @@
             <div class="col-lg-4">
                 <!-- コメントセクション -->
                 <h3>コメント</h3>
-                <form method="post" th:action="@{/articles/post(id=${article.id})}" enctype="multipart/form-data" th:object="${commentDto}" class="mb-4">
+                <form method="post" th:action="@{/articles/post(id=${article.id})}" th:object="${commentDto}" class="mb-4">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="コメントを入力" th:field="${commentDto.content}">
                         <button type="submit" class="btn btn-primary">投稿</button>
                     </div>
                 </form>
                 
-                <!-- コメント一覧 -->
                 <div class="comments-container">
                     <div class="comment-item" th:each="comment : ${comments}" th:if="${comment.article.id} == ${article.id}">
                         <div class="d-flex justify-content-between">
@@ -82,15 +78,16 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:action="@{/articles/comments/edit}" method="post">
-                                            <input type="hidden" name="commentId" th:value="${comment.id}">
-                                            <input type="hidden" name="articleId" th:value="${comment.article.id}">
-                                            <div class="mb-3">
-                                                <label for="editCommentContent" class="form-label">コメント内容</label>
-                                                <textarea class="form-control" id="editCommentContent" name="content" rows="3" th:text="${comment.content}"></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">更新</button>
-                                        </form>
+                                       <form th:action="@{/articles/comments/edit}" method="post" th:object="${commentDto}">
+										    <input type="hidden" name="commentId" th:value="${comment.id}">
+										    <input type="hidden" name="articleId" th:value="${comment.article.id}">
+										    <div class="mb-3">
+										        <label for="editCommentContent" class="form-label">コメント内容</label>
+										        <textarea class="form-control" id="editCommentContent" th:field="*{content}" rows="3"></textarea>
+										        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger mt-1"></p>
+										    </div>
+										    <button type="submit" class="btn btn-primary">更新</button>
+										</form>
                                         <hr>
                                         <form th:action="@{/admin/deleteComment}" method="post" >
                                             <input type="hidden" name="commentId" th:value="${comment.id}">

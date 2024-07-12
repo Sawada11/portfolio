@@ -12,23 +12,26 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title text-center mb-4">新規作成</h2>
-                        <form th:action="@{/register}" th:object="${user}" method="post">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">名前</label>
-                               <input type="text" class="form-control" th:field="*{username}"  required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">パスワード</label>
-                                <input type="password" class="form-control" th:field="*{password}" required>
-                            </div>
-                            <select  th:field="*{role}" hidden>
+						<h2 class="card-title text-center mb-4">新規作成</h2>
+						<form th:action="@{/register}" th:object="${user}" method="post">
+						    <div class="mb-3">
+						        <label for="username" class="form-label">名前</label>
+						        <input type="text" class="form-control" id="username" th:field="*{username}">
+						        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
+						    </div>
+						    <div class="mb-3">
+						        <label for="password" class="form-label">パスワード</label>
+						        <input type="password" class="form-control" id="password" th:field="*{password}">
+						        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></span>
+						    </div>
+						    <select th:field="*{role}" hidden>
 						        <option value="ROLE_USER">ユーザー</option>
 						    </select>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-dark">ログイン</button>
-                            </div>
-                        </form>
+						    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+						    <div class="d-grid">
+						        <button type="submit" class="btn btn-dark">登録</button>
+						    </div>
+						</form>
                     </div>
                     <a  th:href="@{/login}">ログイン</a>
                 </div>

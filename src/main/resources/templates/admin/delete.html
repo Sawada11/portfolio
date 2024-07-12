@@ -17,12 +17,12 @@
 </head>
 <body>
     <div th:replace="layout/adminHeader :: header"></div>
-    
+
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 delete-card p-5">
                 <h2 class="text-center mb-4">記事削除確認</h2>
-                
+
                 <div class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>この操作は取り消せません。本当に削除しますか？
                 </div>
@@ -43,11 +43,11 @@
                         <img th:src="@{'/images/' + ${article.imageFileName}}" alt="記事画像" class="img-fluid rounded" style="max-width: 300px;">
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-danger btn-lg">
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-danger btn-lg flex-grow-1 me-2">
                             <i class="fas fa-trash-alt me-2"></i>削除する
                         </button>
-                        <a class="btn btn-outline-secondary btn-lg" onclick="history.back()" role="button">
+                        <a class="btn btn-outline-secondary btn-lg flex-grow-1" onclick="history.back()" role="button">
                             <i class="fas fa-arrow-left me-2"></i>戻る
                         </a>
                     </div>
