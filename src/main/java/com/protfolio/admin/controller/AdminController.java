@@ -207,4 +207,12 @@ public class AdminController {
     	
     	return "redirect:/admin";
     }
+    
+    /*
+     * 管理者ユーザーの設定画面
+     */
+    @GetMapping("/setting")
+    public String setting() {
+    	return "admin/adminSetting";
+    }
 }
