@@ -1,5 +1,4 @@
 package com.protfolio.controller;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -10,36 +9,41 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.protfolio.controllers.ArticlesController;
 import com.protfolio.models.Article;
-import com.protfolio.models.User;
 import com.protfolio.repository.ArticlesRepository;
+import com.protfolio.security.User;
+import com.protfolio.security.UserService;
 
 @WebMvcTest(ArticlesController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ArticlesControllerTest {
-/*
- * 
- * テスト用ユーザーを作成
- * ログイン認証のテストを作成
- * 
- * 
- */
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private ArticlesRepository repo;
 
+    @MockBean
+    private UserService userService;  // UserServiceをモック
+
     private Article testArticle;
 
     @BeforeEach
     void setUp() {
-    	User testUser = new User();
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setUsername("testuser");
+
         testArticle = new Article();
         testArticle.setId(1);
         testArticle.setUser(testUser);
@@ -49,10 +53,11 @@ public class ArticlesControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = "USER")
     public void testShowArticleList() throws Exception {
         when(repo.findAll(any(Sort.class))).thenReturn(Arrays.asList(testArticle));
 
-        mockMvc.perform(get("/articles"))
+        mockMvc.perform(get("/articles").with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(status().isOk())
                .andExpect(view().name("articles/index"))
                .andExpect(model().attributeExists("articles"));
@@ -60,79 +65,14 @@ public class ArticlesControllerTest {
         verify(repo).findAll(any(Sort.class));
     }
 
-//    @Test
-//    public void testShowCreatePage() throws Exception {
-//        mockMvc.perform(get("/articles/create"))
-//               .andExpect(status().isOk())
-//               .andExpect(view().name("articles/create"))
-//               .andExpect(model().attributeExists("articleDto"));
-//    }
-//
-//    @Test
-//    public void testCreateArticle() throws Exception {
-//        MockMultipartFile imageFile = new MockMultipartFile("imageFileName", "test.jpg", "image/jpeg", "test image content".getBytes());
-//
-//        mockMvc.perform(multipart("/articles/create")
-//               .file(imageFile)
-//               .param("user", "testUser")
-//               .param("title", "Test Title")
-//               .param("content", "Test Content"))
-//               .andExpect(status().is3xxRedirection())
-//               .andExpect(redirectedUrl("/articles"));
-//
-//        verify(repo).save(any(Article.class));
-//    }
-//
-//    @Test
-//    public void testShowEditPage() throws Exception {
-//        when(repo.findById(1)).thenReturn(Optional.of(testArticle));
-//
-//        mockMvc.perform(get("/articles/edit").param("id", "1"))
-//               .andExpect(status().isOk())
-//               .andExpect(view().name("articles/edit"))
-//               .andExpect(model().attributeExists("article", "articleDto"));
-//
-//        verify(repo).findById(1);
-//    }
-//
-//    @Test
-//    public void testEditArticle() throws Exception {
-//        when(repo.findById(1)).thenReturn(Optional.of(testArticle));
-//
-//        MockMultipartFile imageFile = new MockMultipartFile("imageFileName", "test.jpg", "image/jpeg", "test image content".getBytes());
-//
-//        mockMvc.perform(multipart("/articles/edit")
-//               .file(imageFile)
-//               .param("id", "1")
-//               .param("user", "updatedUser")
-//               .param("title", "Updated Title")
-//               .param("content", "Updated Content"))
-//               .andExpect(status().is3xxRedirection())
-//               .andExpect(redirectedUrl("/articles"));
-//
-//        verify(repo).save(any(Article.class));
-//    }
-//
-//    @Test
-//    public void testShowDeletePage() throws Exception {
-//        when(repo.findById(1)).thenReturn(Optional.of(testArticle));
-//
-//        mockMvc.perform(get("/articles/delete").param("id", "1"))
-//               .andExpect(status().isOk())
-//               .andExpect(view().name("articles/delete"))
-//               .andExpect(model().attributeExists("article", "articleDto"));
-//
-//        verify(repo).findById(1);
-//    }
-//
-//    @Test
-//    public void testDeleteArticle() throws Exception {
-//        when(repo.findById(1)).thenReturn(Optional.of(testArticle));
-//
-//        mockMvc.perform(post("/articles/delete").param("id", "1"))
-//               .andExpect(status().is3xxRedirection())
-//               .andExpect(redirectedUrl("/articles"));
-//
-//        verify(repo).delete(any(Article.class));
-//    }
+    // ログイン認証のテスト
+    @Test
+    public void testLoginAuthentication() throws Exception {
+        mockMvc.perform(post("/login")
+                .param("username", "testuser")
+                .param("password", "password")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(redirectedUrl("/articles"));
+    }
 }
