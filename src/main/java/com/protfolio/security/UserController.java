@@ -56,7 +56,7 @@ public class UserController {
     public String showEditForm(Model model, Principal principal) {
         UserDetails user = userService.loadUserByUsername(principal.getName());
         model.addAttribute("user", user);
-        return "/security/edit";
+        return "security/edit";
     }
     
     /*
@@ -87,30 +87,11 @@ public class UserController {
     	return "redirect:/login";
     }
     
-    /*
-     * ログインページを表示
-     */
     @GetMapping("/login")
-    public String login() {
-        return "/security/login";
+    public String showLoginForm(Model model) {
+        model.addAttribute("user", new User());
+        return "security/login";
     }
-    
-    /*
-     * ログイン入力チェック
-     */
-    @PostMapping("/login")
-    public String processLogin(@Valid @ModelAttribute("user") User user, 
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "security/login";
-        }
-        
-        // ここで実際の認証を行う
-        if (userService.authenticate(user.getUsername(), user.getPassword())) {
-            return "redirect:/dashboard"; // 認証成功時のリダイレクト先
-        } else {
-            model.addAttribute("error", "ユーザー名またはパスワードが間違っています。");
-            return "security/login";
-        }
-    }
+
+
 }
