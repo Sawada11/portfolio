@@ -84,4 +84,5 @@ public class UserService implements UserDetailsService {
     		throw new UsernameNotFoundException("ユーザーが存在しません。");
     	}
     }
+ 
 }
