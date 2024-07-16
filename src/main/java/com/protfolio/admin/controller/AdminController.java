@@ -215,4 +215,33 @@ public class AdminController {
     public String setting() {
     	return "admin/adminSetting";
     }
+    
+    /*
+     * 管理者のユーザーの編集画面
+     */
+    @GetMapping("/setting/edit")
+    public String settingEdit(Model model, Principal principal) {
+    	UserDetails user = userService.loadUserByUsername(principal.getName());
+    	model.addAttribute("user",user);
+    	return "admin/adminEdit";
+    }
+    
+    /*
+     * 管理者ユーザーの編集
+     */
+    @PostMapping("/setting/edit")
+    public String settingUserEdit(@Valid @ModelAttribute("user") User user,
+    		BindingResult bindingResult, Model model) {
+    	if(bindingResult.hasErrors()) {
+    		return "admin/adminEdit";
+    	}
+    	
+    	try {
+    		userService.updateUser(user);
+    	} catch(RuntimeException e) {
+    		model.addAttribute("error", e.getMessage());
+    		return "admin/adminEdit";
+    	}
+    	return "redirect:/admin";
+    }
 }
