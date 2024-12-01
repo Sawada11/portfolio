@@ -98,19 +98,20 @@ public class UserController {
     /*
      * ログイン入力チェック
      */
-    @PostMapping("/login")
-    public String processLogin(@Valid @ModelAttribute("user") User user, 
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "security/login";
-        }
-        
-        // ここで実際の認証を行う
-        if (userService.authenticate(user.getUsername(), user.getPassword())) {
-            return "redirect:/dashboard"; // 認証成功時のリダイレクト先
-        } else {
-            model.addAttribute("error", "ユーザー名またはパスワードが間違っています。");
-            return "security/login";
-        }
-    }
+//    @PostMapping("/login")
+//    public String processLogin(@Valid @ModelAttribute("user") User user, 
+//                               BindingResult bindingResult, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            return "security/login";
+//        }
+//        
+//        // ここで実際の認証を行う
+//        if (userService.authenticate(user.getUsername(), user.getPassword())) {
+//            return "redirect:/dashboard"; // 認証成功時のリダイレクト先
+//        } else {
+//            model.addAttribute("error", "ユーザー名またはパスワードが間違っています。");
+//            return "security/login";
+//        }
+//        return"security/login";
+//    }
 }
