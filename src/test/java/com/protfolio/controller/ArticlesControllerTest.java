@@ -17,11 +17,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.protfolio.controllers.ArticlesController;
-import com.protfolio.models.Article;
-import com.protfolio.repository.ArticlesRepository;
-import com.protfolio.security.User;
-import com.protfolio.security.UserService;
+import com.protfolio.article.ArticleEntity;
+import com.protfolio.article.ArticlesController;
+import com.protfolio.article.ArticlesRepository;
+import com.protfolio.user.UserEntity;
+import com.protfolio.user.UserService;
 
 @WebMvcTest(ArticlesController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -36,15 +36,15 @@ public class ArticlesControllerTest {
     @MockBean
     private UserService userService;  // UserServiceをモック
 
-    private Article testArticle;
+    private ArticleEntity testArticle;
 
     @BeforeEach
     void setUp() {
-        User testUser = new User();
+        UserEntity testUser = new UserEntity();
         testUser.setId(1L);
         testUser.setUsername("testuser");
 
-        testArticle = new Article();
+        testArticle = new ArticleEntity();
         testArticle.setId(1);
         testArticle.setUser(testUser);
         testArticle.setTitle("Test Title");

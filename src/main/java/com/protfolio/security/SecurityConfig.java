@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.protfolio.user.UserService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

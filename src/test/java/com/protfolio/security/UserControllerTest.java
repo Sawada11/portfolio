@@ -14,6 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.protfolio.user.UserController;
+import com.protfolio.user.UserEntity;
+import com.protfolio.user.UserService;
+
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -23,11 +27,11 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private User testUser;
+    private UserEntity testUser;
 
     @BeforeEach
     void setUp() {
-        testUser = new User();
+        testUser = new UserEntity();
         testUser.setUsername("testuser");
         testUser.setPassword("password");
     }
@@ -52,7 +56,7 @@ public class UserControllerTest {
                .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/register"));  // リダイレクト先を確認
 
-        verify(userService).createUser(any(User.class));
+        verify(userService).createUser(any(UserEntity.class));
     }
 
 
